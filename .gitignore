@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Pytest
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+.env.*
+
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# ML artifacts
+ml/models/*.bin
+ml/models/*.pkl
+ml/models/*.joblib
+
+# Data
+ml/data/raw/*
+ml/data/processed/*
+
+# Keep directory structure
+!ml/data/raw/.gitkeep
+!ml/data/processed/.gitkeep

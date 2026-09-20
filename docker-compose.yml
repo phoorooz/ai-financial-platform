@@ -1,0 +1,17 @@
+services:
+  python:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai_financial_python
+    volumes:
+      - .:/app
+      - python_packages:/usr/local/lib/python3.12/site-packages
+    working_dir: /app
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    tty: true
+
+volumes:
+  python_packages:
