@@ -41,3 +41,7 @@ ml/data/processed/*
 # Keep directory structure
 !ml/data/raw/.gitkeep
 !ml/data/processed/.gitkeep
+
+# MLflow
+mlflow.db
+mlruns/

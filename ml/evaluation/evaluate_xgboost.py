@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import mlflow
 import pandas as pd
 from sklearn.metrics import (
     mean_absolute_error,
@@ -52,7 +53,6 @@ def load_model() -> XGBRegressor:
         )
 
     model = XGBRegressor()
-
     model.load_model(MODEL_PATH)
 
     return model
@@ -76,7 +76,7 @@ def calculate_directional_accuracy(
 def evaluate(
     model: XGBRegressor,
     data: pd.DataFrame,
-) -> None:
+) -> dict:
     """Evaluate model on unseen test data."""
 
     X = data[FEATURE_COLUMNS]
@@ -103,19 +103,14 @@ def evaluate(
         )
     )
 
-    print("\nXGBoost Evaluation")
-    print("------------------")
-
-    print(f"MAE:  {mae:.6f}")
-    print(f"RMSE: {rmse:.6f}")
-    print(
-        f"Directional Accuracy: "
-        f"{directional_accuracy:.2%}"
-    )
+    return {
+        "mae": mae,
+        "rmse": rmse,
+        "directional_accuracy": directional_accuracy,
+    }
 
 
 def main() -> None:
-
     print("Loading test data...")
 
     data = load_test_data()
@@ -130,7 +125,38 @@ def main() -> None:
 
     print("Model loaded successfully.")
 
-    evaluate(model, data)
+    print("\nStarting MLflow run...")
+
+    with mlflow.start_run() as run:
+        metrics = evaluate(
+            model,
+            data,
+        )
+
+        mlflow.log_metrics(metrics)
+
+        print("\nXGBoost Evaluation")
+        print("------------------")
+
+        print(
+            f"MAE:  "
+            f"{metrics['mae']:.6f}"
+        )
+
+        print(
+            f"RMSE: "
+            f"{metrics['rmse']:.6f}"
+        )
+
+        print(
+            f"Directional Accuracy: "
+            f"{metrics['directional_accuracy']:.2%}"
+        )
+
+        print(
+            f"\nMLflow Run ID: "
+            f"{run.info.run_id}"
+        )
 
 
 if __name__ == "__main__":
