@@ -8,3 +8,4 @@ uvicorn[standard]
 pydantic
 pytest
 httpx2
+mlflow==3.16.1
