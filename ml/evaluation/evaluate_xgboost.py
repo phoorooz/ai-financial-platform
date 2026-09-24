@@ -125,15 +125,29 @@ def main() -> None:
 
     print("Model loaded successfully.")
 
+    mlflow.set_experiment(
+        "bitcoin_return_prediction"
+    )
+
     print("\nStarting MLflow run...")
 
     with mlflow.start_run() as run:
+
+        # Record which local model file was used
+        # for this evaluation.
+        mlflow.log_param(
+            "model_file",
+            str(MODEL_PATH),
+        )
+
         metrics = evaluate(
             model,
             data,
         )
 
-        mlflow.log_metrics(metrics)
+        mlflow.log_metrics(
+            metrics
+        )
 
         print("\nXGBoost Evaluation")
         print("------------------")

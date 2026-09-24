@@ -1,21 +1,16 @@
-```python
 from pathlib import Path
 
 import mlflow
 import pandas as pd
-from sklearn.metrics import (
-    mean_absolute_error,
-    mean_squared_error,
-)
 from xgboost import XGBRegressor
 
 
-TEST_PATH = Path(
-    "ml/data/processed/btc-usd_test.csv"
+TRAIN_PATH = Path(
+    "ml/data/processed/btc-usd_train.csv"
 )
 
-MODEL_PATH = Path(
-    "ml/models/xgboost_btc_return.json"
+MODEL_DIR = Path(
+    "ml/models"
 )
 
 FEATURE_COLUMNS = [
@@ -34,135 +29,119 @@ FEATURE_COLUMNS = [
 TARGET_COLUMN = "target_return_1d"
 
 
-def load_test_data() -> pd.DataFrame:
-    """Load test dataset."""
+def load_training_data() -> pd.DataFrame:
+    """Load training dataset."""
 
-    if not TEST_PATH.exists():
+    if not TRAIN_PATH.exists():
         raise FileNotFoundError(
-            f"Test dataset not found: {TEST_PATH}"
+            f"Training dataset not found: {TRAIN_PATH}"
         )
 
-    return pd.read_csv(TEST_PATH)
+    return pd.read_csv(TRAIN_PATH)
 
 
-def load_model() -> XGBRegressor:
-    """Load trained XGBoost model."""
-
-    if not MODEL_PATH.exists():
-        raise FileNotFoundError(
-            f"Model not found: {MODEL_PATH}"
-        )
-
-    model = XGBRegressor()
-
-    model.load_model(MODEL_PATH)
-
-    return model
-
-
-def calculate_directional_accuracy(
-    actual: pd.Series,
-    predictions: pd.Series,
-) -> float:
-    """Calculate percentage of correct directions."""
-
-    actual_direction = actual >= 0
-    predicted_direction = predictions >= 0
-
-    return (
-        (actual_direction == predicted_direction)
-        .mean()
-    )
-
-
-def evaluate(
-    model: XGBRegressor,
+def train_model(
     data: pd.DataFrame,
-) -> dict:
-    """Evaluate model on unseen test data."""
+) -> XGBRegressor:
+    """Train XGBoost regression model."""
 
     X = data[FEATURE_COLUMNS]
     y = data[TARGET_COLUMN]
 
-    predictions = model.predict(X)
-
-    mae = mean_absolute_error(
-        y,
-        predictions,
-    )
-
-    mse = mean_squared_error(
-        y,
-        predictions,
-    )
-
-    rmse = mse ** 0.5
-
-    directional_accuracy = (
-        calculate_directional_accuracy(
-            y,
-            predictions,
-        )
-    )
-
-    return {
-        "mae": mae,
-        "rmse": rmse,
-        "directional_accuracy": directional_accuracy,
+    model_params = {
+        "n_estimators": 300,
+        "max_depth": 5,
+        "learning_rate": 0.03,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "objective": "reg:squarederror",
+        "random_state": 42,
     }
+
+    mlflow.log_params(model_params)
+    mlflow.log_param(
+        "training_rows",
+        len(data),
+    )
+
+    model = XGBRegressor(
+        **model_params
+    )
+
+    model.fit(X, y)
+
+    return model
+
+
+def save_model(
+    model: XGBRegressor,
+) -> Path:
+    """Save trained model."""
+
+    MODEL_DIR.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    model_path = (
+        MODEL_DIR
+        / "xgboost_btc_return.json"
+    )
+
+    model.save_model(model_path)
+
+    print(
+        f"\nModel saved to: {model_path}"
+    )
+
+    return model_path
 
 
 def main() -> None:
+    print("Loading training data...")
 
-    print("Loading test data...")
-
-    data = load_test_data()
+    data = load_training_data()
 
     print(
-        f"Test observations: {len(data)}"
+        f"Training observations: "
+        f"{len(data)}"
     )
 
-    print("\nLoading XGBoost model...")
+    print("\nFeatures:")
+    print(FEATURE_COLUMNS)
 
-    model = load_model()
+    print(
+        f"\nTarget: "
+        f"{TARGET_COLUMN}"
+    )
 
-    print("Model loaded successfully.")
+    mlflow.set_experiment(
+        "bitcoin_return_prediction"
+    )
 
-    print("\nStarting MLflow run...")
+    print(
+        "\nStarting MLflow run..."
+    )
 
     with mlflow.start_run() as run:
 
-        metrics = evaluate(
-            model,
-            data,
+        print("Training XGBoost...")
+
+        model = train_model(data)
+
+        mlflow.xgboost.log_model(
+        model,
+        artifact_path="xgboost_model",
         )
 
-        mlflow.log_metrics(metrics)
+        print("Training completed!")
 
-        print("\nXGBoost Evaluation")
-        print("------------------")
-
-        print(
-            f"MAE:  "
-            f"{metrics['mae']:.6f}"
-        )
+        save_model(model)
 
         print(
-            f"RMSE: "
-            f"{metrics['rmse']:.6f}"
-        )
-
-        print(
-            f"Directional Accuracy: "
-            f"{metrics['directional_accuracy']:.2%}"
-        )
-
-        print(
-            f"\nMLflow Run ID: "
+            f"MLflow Run ID: "
             f"{run.info.run_id}"
         )
 
-
 if __name__ == "__main__":
     main()
-```
