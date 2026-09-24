@@ -18,31 +18,31 @@ I built this project to practice the complete ML engineering workflow — from c
 
 Yahoo Finance
 
-&#x20;    ↓
+    ↓
 
 Data Cleaning \& Validation
 
-&#x20;    ↓
+    ↓
 
 Feature Engineering
 
-&#x20;    ↓
+    ↓
 
 Time-Series Train/Test Split
 
-&#x20;    ↓
+    ↓
 
 XGBoost Model
 
-&#x20;    ↓
+    ↓
 
 MLflow Experiment Tracking
 
-&#x20;    ↓
+    ↓
 
 FastAPI
 
-&#x20;    ↓
+    ↓
 
 Docker + Tests + CI
 
