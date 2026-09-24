@@ -1,8 +1,8 @@
-\# AI Financial Forecasting Platform
+# AI Financial Forecasting Platform
 
 
 
-An end-to-end Machine Learning project built by \*\*Ali Forouzan\*\* for predicting Bitcoin's next-day return.
+An end-to-end Machine Learning project built by **Ali Forouzan** for predicting Bitcoin's next-day return.
 
 
 
@@ -50,31 +50,31 @@ Docker + Tests + CI
 
 
 
-\### Main technologies
+### Main technologies
 
 
 
-\* Python
+* Python
 
-\* Pandas / NumPy
+* Pandas / NumPy
 
-\* XGBoost
+* XGBoost
 
-\* Scikit-learn
+* Scikit-learn
 
-\* MLflow
+* MLflow
 
-\* FastAPI
+* FastAPI
 
-\* Docker
+* Docker
 
-\* Pytest
+* Pytest
 
-\* GitHub Actions
+* GitHub Actions
 
 
 
-\## 📁 Project Structure
+## 📁 Project Structure
 
 
 
@@ -108,11 +108,11 @@ ai-financial-platform/
 
 
 
-\## ▶️ Run the Project
+## ▶️ Run the Project
 
 
 
-\### 1. Clone the repository
+### 1. Clone the repository
 
 
 
@@ -126,7 +126,7 @@ cd ai-financial-platform
 
 
 
-\### 2. Start Docker
+### 2. Start Docker
 
 
 
@@ -140,7 +140,7 @@ docker compose up -d
 
 
 
-\### 3. Run the ML pipeline
+### 3. Run the ML pipeline
 
 
 
@@ -162,7 +162,7 @@ docker compose exec python python ml/evaluation/evaluate\_xgboost.py
 
 
 
-\### 4. Start the API
+### 4. Start the API
 
 
 
@@ -174,7 +174,7 @@ docker compose exec python uvicorn app.api.main:app --host 0.0.0.0 --port 8000
 
 
 
-Then open the \*\*Swagger API documentation\*\* at:
+Then open the **Swagger API documentation** at:
 
 
 
@@ -186,15 +186,15 @@ The main endpoints are:
 
 
 
-\* `GET /health`
+* `GET /health`
 
-\* `POST /predict`
+* `POST /predict`
 
-\* `GET /predict/latest`
+* `GET /predict/latest`
 
 
 
-\## 📊 Current Model Results
+## 📊 Current Model Results
 
 
 
@@ -218,7 +218,7 @@ These results are from the current experiment and are mainly used to evaluate an
 
 
 
-\## 🧪 MLflow
+## 🧪 MLflow
 
 
 
@@ -230,15 +230,15 @@ This makes it easier to compare different experiments as the project evolves.
 
 
 
-\## 🧑‍💻 About
+## 🧑‍💻 About
 
 
 
-\*\*Built by Ali Forouzan\*\*
+**Built by Ali Forouzan**
 
 
 
-AI \& Software Engineer interested in Machine Learning, AI, backend development, and practical ML systems.
+AI & Software Engineer interested in Machine Learning, AI, backend development, and practical ML systems.
 
 
 
@@ -246,11 +246,11 @@ GitHub: `phoorooz`
 
 
 
-\---
+---
 
 
 
-> \*\*Note:\*\* This is an educational ML engineering project, not a financial or trading recommendation.
+> **Note:** This is an educational ML engineering project, not a financial or trading recommendation.
 
 
 
