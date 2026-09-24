@@ -146,17 +146,17 @@ docker compose up -d
 
 ```bash
 
-docker compose exec python python ml/data/download\_data.py
+docker compose exec python python ml/data/download_data.py
 
-docker compose exec python python ml/data/prepare\_data.py
+docker compose exec python python ml/data/prepare_data.py
 
-docker compose exec python python ml/features/build\_features.py
+docker compose exec python python ml/features/build_features.py
 
-docker compose exec python python ml/training/split\_data.py
+docker compose exec python python ml/training/split_data.py
 
-docker compose exec python python ml/training/train\_xgboost.py
+docker compose exec python python ml/training/train_xgboost.py
 
-docker compose exec python python ml/evaluation/evaluate\_xgboost.py
+docker compose exec python python ml/evaluation/evaluate_xgboost.py
 
 ```
 
